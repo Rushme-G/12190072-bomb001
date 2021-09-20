@@ -1,5 +1,7 @@
 Bomb1 : Phase_1
 
+Note : All the lines starting with the // are the comments / documentation
+
 // Opening a terminal with the path directed to bomb1 folder:
  
 $ objdump -d bomb > bomb.s // Changing the bomb.c file to bomb.s file 
