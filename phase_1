@@ -94,5 +94,5 @@ Start it from the beginning? (y or n) y
 Starting program: /home/rushme/Downloads/Assignment 1_2/Assignment 1/bomb001/bomb 
 Welcome to my fiendish little bomb. You have 6 phases with
 which to blow yourself up. Have a nice day!
-The moon unit will be divided into two divisions.        // giving the input for the phase_1
+The moon unit will be divided into two divisions.         // giving the input for the phase_1
 Phase 1 defused. How about the next one?                // the input given is correct and therefore the bomb is defused.
