@@ -8,7 +8,7 @@ $ objdump -d bomb > bomb.s // Changing the bomb.c file to bomb.s file
 $ vim bomb.s  // vim is used for reading the bomb.s file
 
 // Then another terminal is opened with the path directed to the bomb1 folder as well and we run the bomb inside gdb where we can disassemble each phase, 
-view 		the code, stop at the phase, execute instruction by instruction and examine the registers, memory and stack to get an idea about 		what is going on. 
+view the program, stop at the phase, execute instruction by instruction and examine the registers, memory and stack to get an idea about 	what is going on. 
 
 rushme@rushme-Inspiron-3542:~/Downloads/Assignment 1_2/Assignment 1/bomb001$ gdb bomb
 GNU gdb (Ubuntu 9.2-0ubuntu1~20.04) 9.2
@@ -28,7 +28,7 @@ For help, type "help".
 Type "apropos word" to search for commands related to "word"...
 Reading symbols from bomb...
 
-// disassemble command is used to disassemble the phase_1 code
+// disassemble command is used to disassemble the phase_1 program
 
 (gdb) disas phase_1
 Dump of assembler code for function phase_1:
@@ -50,17 +50,17 @@ prevent the explosion of the bomb we set a breakpoint on the <phase_1> function 
 Breakpoint 1 at 0x400e8d
 (gdb) b explode_bomb        // set breakpoint
 Breakpoint 2 at 0x40143d
-(gdb) r    // run command
+(gdb) r                     // run command
 Starting program: /home/rushme/Downloads/Assignment 1_2/Assignment 1/bomb001/bomb 
 Welcome to my fiendish little bomb. You have 6 phases with
 which to blow yourself up. Have a nice day!
-bomb1 phase1  // giving a random string value as an answer
+bomb1 phase1                // giving a random string value as an answer
 
 Breakpoint 1, 0x0000000000400e8d in phase_1 ()
 (gdb) disas      //disassemble phase_1
 Dump of assembler code for function phase_1:
-=> 0x0000000000400e8d <+0>:	sub    $0x8,%rsp // substraction is done 
-   0x0000000000400e91 <+4>:	mov    $0x4023d0,%esi // a value is being moved to %esi register
+=> 0x0000000000400e8d <+0>:	sub    $0x8,%rsp             // substraction is done 
+   0x0000000000400e91 <+4>:	mov    $0x4023d0,%esi        // a value is being moved to %esi register
    0x0000000000400e96 <+9>:	callq  0x40133e <strings_not_equal>
    0x0000000000400e9b <+14>:	test   %eax,%eax
    0x0000000000400e9d <+16>:	je     0x400ea4 <phase_1+23>
@@ -68,31 +68,31 @@ Dump of assembler code for function phase_1:
    0x0000000000400ea4 <+23>:	add    $0x8,%rsp
    0x0000000000400ea8 <+27>:	retq   
 End of assembler dump.
-(gdb) x/d $rsp // value of %rsp before the first instruction is -11
+(gdb) x/d $rsp        // value of %rsp before the first instruction is -11
 0x7fffffffdde8:	-11
-(gdb) ni       // next instruction 
+(gdb) ni             // next instruction 
 0x0000000000400e91 in phase_1 ()
-(gdb) x/d $rsp // value of %rsp after the substraction instruction is 0
+(gdb) x/d $rsp      // value of %rsp after the substraction instruction is 0
 0x7fffffffdde0:	0
-(gdb) x/s 0x4023d0 // finding the value of $0x4023d0 which is being moved to %esi
+(gdb) x/s 0x4023d0  // finding the value of $0x4023d0 which is being moved to %esi
 0x4023d0:	"The moon unit will be divided into two divisions." 
 
-// From this value we can figure out if this string might be an answer so therefore we run the code again with the above string as the answer.
+// From this value we can figure out if this string might be an answer so therefore we run the program again with the above string as the answer.
 But before running the code we have to make sure to delete the previous break points so that it does not call the main function and instead 
 the refused message or the explode message. Then, we set new break points in the <phase_2> and <explode_bomb> functions to avoid the explosion 
 of the second phase if the first answer is right.
 
-(gdb) delete  // deleting all the breakpoints
+(gdb) delete                        // deleting all the breakpoints
 Delete all breakpoints? (y or n) y
-(gdb) b phase_2   // setting the break point in the <phase_2> function
+(gdb) b phase_2                    // setting the break point in the <phase_2> function
 Breakpoint 3 at 0x400ea9
-(gdb) b explode_bomb // setting the break point in the <explode_bomb> function
+(gdb) b explode_bomb               // setting the break point in the <explode_bomb> function
 Breakpoint 4 at 0x40143d
-(gdb) r //running the code
+(gdb) r                            //running the code
 The program being debugged has been started already.
 Start it from the beginning? (y or n) y
 Starting program: /home/rushme/Downloads/Assignment 1_2/Assignment 1/bomb001/bomb 
 Welcome to my fiendish little bomb. You have 6 phases with
 which to blow yourself up. Have a nice day!
-The moon unit will be divided into two divisions.  // giving the input for the phase_1
-Phase 1 defused. How about the next one?       // the input given is correct and therefore the bomb is defused.
+The moon unit will be divided into two divisions.        // giving the input for the phase_1
+Phase 1 defused. How about the next one?                // the input given is correct and therefore the bomb is defused.
