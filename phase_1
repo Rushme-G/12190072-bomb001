@@ -5,7 +5,8 @@ Bomb1 : Phase_1
 $ objdump -d bomb > bomb.s // Changing the bomb.c file to bomb.s file 
 $ vim bomb.s  // vim is used for reading the bomb.s file
 
-// Then another terminal is opened with the path directed to the bomb1 folder as well and we run the bomb inside gdb where we can disassemble each phase, view 		the code, stop at the phase, execute instruction by instruction and examine the registers, memory and stack to get an idea about 		what is going on. 
+// Then another terminal is opened with the path directed to the bomb1 folder as well and we run the bomb inside gdb where we can disassemble each phase, 
+view 		the code, stop at the phase, execute instruction by instruction and examine the registers, memory and stack to get an idea about 		what is going on. 
 
 rushme@rushme-Inspiron-3542:~/Downloads/Assignment 1_2/Assignment 1/bomb001$ gdb bomb
 GNU gdb (Ubuntu 9.2-0ubuntu1~20.04) 9.2
@@ -39,7 +40,9 @@ Dump of assembler code for function phase_1:
    0x0000000000400ea8 <+27>:	retq   
 End of assembler dump.
 
-// From the above code we try to find some clue and from <strings_not_equal> function, we can assume that it checks equality of the strings. Here, we can makeout that the input type(phase_1 solution) might be of string datatype. So, now we run the code but before that inorder to prevent the explosion of the bomb we set a breakpoint on the <phase_1> function and <explode_bomb> function.
+// From the above code we try to find some clue and from <strings_not_equal> function, we can assume that it checks equality of the strings.
+Here, we can makeout that the input type(phase_1 solution) might be of string datatype. So, now we run the code but before that inorder to 
+prevent the explosion of the bomb we set a breakpoint on the <phase_1> function and <explode_bomb> function.
 
 (gdb) b phase_1             // set breakpoint 
 Breakpoint 1 at 0x400e8d
@@ -72,7 +75,10 @@ End of assembler dump.
 (gdb) x/s 0x4023d0 // finding the value of $0x4023d0 which is being moved to %esi
 0x4023d0:	"The moon unit will be divided into two divisions." 
 
-// From this value we can figure out if this string might be an answer so therefore we run the code again with the above string as the answer. But before running the code we have to make sure to delete the previous break points so that it does not call the main function and instead the refused message or the explode message. Then, we set new break points in the <phase_2> and <explode_bomb> functions to avoid the explosion of the second phase if the first answer is right.
+// From this value we can figure out if this string might be an answer so therefore we run the code again with the above string as the answer.
+But before running the code we have to make sure to delete the previous break points so that it does not call the main function and instead 
+the refused message or the explode message. Then, we set new break points in the <phase_2> and <explode_bomb> functions to avoid the explosion 
+of the second phase if the first answer is right.
 
 (gdb) delete  // deleting all the breakpoints
 Delete all breakpoints? (y or n) y
