@@ -271,7 +271,7 @@ Phase 1 defused. How about the next one?
 0 1 1 2 3 5                 // new input (fibonacci series)
 That's number 2.  Keep going!  
 
- // Hence, the answer for phase_2 bomb is accepted and the bomb is difused. 
+ // Hence, the answer for phase_2 bomb is accepted and the bomb is defused. 
  
  
  
