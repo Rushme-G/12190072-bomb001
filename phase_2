@@ -1,6 +1,6 @@
 Bomb001 : Phase_2
 
-Note : All the lines starting with the " // " are the comments / documentation
+NOTE : All the lines starting with the symbol " // " are the comments / documentation.
 
 // After the defusion of the first phase, the answer of the phase_1 is saved in a txt file( sol1.txt)for efficiency in execution of the rest of the phases. 
 
@@ -9,7 +9,7 @@ Welcome to my fiendish little bomb. You have 6 phases with
 which to blow yourself up. Have a nice day!
 The moon unit will be divided into two divisions.  // giving the input for the phase_1
 Phase 1 defused. How about the next one?       // the input given is correct and therefore the bomb is defused.
-phase_2 solution   // giving a random input for the phase_2 
+phase_2 solution   // giving a random input for the phase_2 bomb
 
 Breakpoint 3, 0x0000000000400ea9 in phase_2 () 
 (gdb) disas   // disassembling the phase_2
@@ -20,7 +20,7 @@ Dump of assembler code for function phase_2:
    0x0000000000400eaf <+6>:	mov    %fs:0x28,%rax
    0x0000000000400eb8 <+15>:	mov    %rax,0x18(%rsp)
    0x0000000000400ebd <+20>:	xor    %eax,%eax
-   0x0000000000400ebf <+22>:	mov    %rsp,%rsi
+   0x0000000000400ebf <+22>:	mov    %rsp,%rsi       // Till this instruction, the values of the registers are only being manipulated 
    0x0000000000400ec2 <+25>:	callq  0x40145f <read_six_numbers>
    0x0000000000400ec7 <+30>:	cmpl   $0x0,(%rsp)
    0x0000000000400ecb <+34>:	jne    0x400ed4 <phase_2+43>
@@ -46,3 +46,230 @@ Dump of assembler code for function phase_2:
    0x0000000000400f13 <+106>:	pop    %rbp
    0x0000000000400f14 <+107>:	retq   
 End of assembler dump.
+
+// After disassembling the phase_2 program, we can scan through it and try to find some clue such as the input and its datatype.
+//So, from the above disassembled program, there is a <read_six_numbers> function which indicates that the input type is numbers of total six(six numbers). As the input type that we have randomly given for the phase_2 is a string so now we can again change the input. We can also make absolutly sure that the input type is numbers of by disas <read_six_numbers>.
+
+(gdb) disas read_six_numbers
+Dump of assembler code for function read_six_numbers:
+   0x000000000040145f <+0>:	sub    $0x8,%rsp
+   0x0000000000401463 <+4>:	mov    %rsi,%rdx
+   0x0000000000401466 <+7>:	lea    0x4(%rsi),%rcx
+   0x000000000040146a <+11>:	lea    0x14(%rsi),%rax
+   0x000000000040146e <+15>:	push   %rax
+   0x000000000040146f <+16>:	lea    0x10(%rsi),%rax
+   0x0000000000401473 <+20>:	push   %rax
+   0x0000000000401474 <+21>:	lea    0xc(%rsi),%r9
+   0x0000000000401478 <+25>:	lea    0x8(%rsi),%r8
+   0x000000000040147c <+29>:	mov    $0x4025c3,%esi      // 0x4025c3 is being moved to %esi
+   0x0000000000401481 <+34>:	mov    $0x0,%eax
+   0x0000000000401486 <+39>:	callq  0x400bb0 <__isoc99_sscanf@plt>
+   0x000000000040148b <+44>:	add    $0x10,%rsp
+   0x000000000040148f <+48>:	cmp    $0x5,%eax
+   0x0000000000401492 <+51>:	jg     0x401499 <read_six_numbers+58>
+   0x0000000000401494 <+53>:	callq  0x40143d <explode_bomb>     // we are safe as we have set a break point to this function
+   0x0000000000401499 <+58>:	add    $0x8,%rsp
+   0x000000000040149d <+62>:	retq   
+End of assembler dump.
+
+ // Lets check the value of 0x4025c3
+ 
+(gdb) x/s 0x4025c3
+0x4025c3:	"%d %d %d %d %d %d" // Here, we can make out that the input format might be six numbers. so, lets check if with our entered input (0 1 2 3 4 5) :
+
+   0x0000000000400ebf <+22>:	mov    %rsp,%rsi
+=> 0x0000000000400ec2 <+25>:	callq  0x40145f <read_six_numbers>  // Before execution
+   0x0000000000400ec7 <+30>:	cmpl   $0x0,(%rsp)
+
+
+   0x0000000000400ebf <+22>:	mov    %rsp,%rsi
+   0x0000000000400ec2 <+25>:	callq  0x40145f <read_six_numbers>
+=> 0x0000000000400ec7 <+30>:	cmpl   $0x0,(%rsp) // After execution
+   // The breakpoint was not triggered which means that the input format is correct.
+
+=> 0x0000000000400ec7 <+30>:	cmpl   $0x0,(%rsp)
+   // Value of %rsp is being compared to 0
+   
+(gdb) x/d $rsp
+0x7fffffffdda0:	0 
+  // the value of %rsp is 0 
+  
+   0x0000000000400ecb <+34>:	jne    0x400ed4 <phase_2+43>
+=> 0x0000000000400ecd <+36>:	cmpl   $0x1,0x4(%rsp)
+   0x0000000000400ed2 <+41>:	je     0x400ed9 <phase_2+48>
+   0x0000000000400ed4 <+43>:	callq  0x40143d <explode_bomb>
+   // As the value of %rsp is equal to 0, so the bomb will not explode wjich is in <phase_2+43> and instead will directly move to next instruction. Here, we come to know that out forst input is correct which is 0(zero).
+   
+   => 0x0000000000400ecd <+36>:	cmpl   $0x1,0x4(%rsp)
+   // In the next instruction the 0x4(%rsp) value is compared with value 1. And the value of 0x4(%rsp) is: 
+   
+(gdb) i r
+rax            0x6                 6
+rbx            0x7fffffffded8      140737488346840
+rcx            0x0                 0
+rdx            0x7fffffffddb4      140737488346548
+rsi            0x0                 0
+rdi            0x7fffffffd730      140737488344880
+rbp            0x0                 0x0
+rsp            0x7fffffffdda0      0x7fffffffdda0
+r8             0x20                32
+r9             0x0                 0
+r10            0x7ffff7f62ac0      140737353493184
+r11            0x0                 0
+r12            0x400c60            4197472
+r13            0x7fffffffded0      140737488346832
+r14            0x0                 0
+r15            0x0                 0
+rip            0x400ecd            0x400ecd <phase_2+36>
+eflags         0x246               [ PF ZF IF ]
+cs             0x33                51
+ss             0x2b                43
+ds             0x0                 0
+es             0x0                 0
+fs             0x0                 0
+gs             0x0                 0
+(gdb) x/d 0x7fffffffdda4 // adress of %rsp + 4
+0x7fffffffdda4:	1 // value of 0x4(%rsp) which is equal to 1.
+
+  //Before the <+41> execution
+ => 0x0000000000400ed2 <+41>:	je     0x400ed9 <phase_2+48>
+   0x0000000000400ed4 <+43>:	callq  0x40143d <explode_bomb>
+   0x0000000000400ed9 <+48>:	mov    %rsp,%rbx
+   
+  //Before the <+41> execution  
+   0x0000000000400ed2 <+41>:	je     0x400ed9 <phase_2+48>
+   0x0000000000400ed4 <+43>:	callq  0x40143d <explode_bomb>
+=> 0x0000000000400ed9 <+48>:	mov    %rsp,%rbx
+  // As value of 0x4(%rsp) is equvalent to 1, the <explode_bomb> function was skipped. This indicates that the second input(1) is also correct.
+  
+   0x0000000000400ed9 <+48>:	mov    %rsp,%rbx
+   0x0000000000400edc <+51>:	lea    0x10(%rsp),%rbp
+   0x0000000000400ee1 <+56>:	mov    0x4(%rbx),%eax
+   0x0000000000400ee4 <+59>:	add    (%rbx),%eax
+=> 0x0000000000400ee6 <+61>:	cmp    %eax,0x8(%rbx)
+  // Till <+59> line, the values of the registers are manupulated. But in line <+61> the value of 0x8(%rbx) is being compared to the value of %eax. The value of 0x8(%rbx) and %eax are : 
+  
+  (gdb) i r
+rax            0x1                 1              // value of %eax which is the system's saved third value
+rbx            0x7fffffffdda0      140737488346528
+rcx            0x0                 0
+rdx            0x7fffffffddb4      140737488346548
+rsi            0x0                 0
+rdi            0x7fffffffd730      140737488344880
+rbp            0x7fffffffddb0      0x7fffffffddb0
+rsp            0x7fffffffdda0      0x7fffffffdda0
+r8             0x20                32
+r9             0x0                 0
+r10            0x7ffff7f62ac0      140737353493184
+r11            0x0                 0
+r12            0x400c60            4197472
+r13            0x7fffffffded0      140737488346832
+r14            0x0                 0
+r15            0x0                 0
+rip            0x400ee6            0x400ee6 <phase_2+61>
+eflags         0x202               [ IF ]
+cs             0x33                51
+ss             0x2b                43
+ds             0x0                 0
+es             0x0                 0
+fs             0x0                 0
+gs             0x0                 0
+(gdb) x/d 0x7fffffffdda8
+0x7fffffffdda8:	2  // value of 0x8(%rbx) which is our third input
+
+ =>0x0000000000400ee9 <+64>:	je     0x400ef0 <phase_2+71>
+   0x0000000000400eeb <+66>:	callq  0x40143d <explode_bomb>
+   0x0000000000400ef0 <+71>:	add    $0x4,%rbx
+   // As the value of 0x8(%rbx) and %eax are not equal the bomb will explode (break point will be triggered). Which means that the       third   our third input(2) is wrong. So, now lets again update the input (third number = 1).
+   
+(gdb) r sol1.txt
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /home/rushme/Downloads/Assignment 1_2/Assignment 1/bomb001/bomb sol1.txt
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Phase 1 defused. How about the next one?
+0 1 1 2 3 4     // new input for phase_2
+
+(gdb) i r
+rax            0x1                 1  // value of %eax
+rbx            0x7fffffffdda0      140737488346528
+
+(gdb) x/d 0x7fffffffdda8
+0x7fffffffdda8:	1    // value of 0x8(%rbx)
+
+// Before execution. 
+=> 0x0000000000400ee9 <+64>:	je     0x400ef0 <phase_2+71>
+   0x0000000000400eeb <+66>:	callq  0x40143d <explode_bomb>
+   0x0000000000400ef0 <+71>:	add    $0x4,%rbx
+
+
+ // After execution. The <explode_bomb> function was skipped which means the third input(1) is correct.
+   0x0000000000400ee9 <+64>:	je     0x400ef0 <phase_2+71>
+   0x0000000000400eeb <+66>:	callq  0x40143d <explode_bomb>
+=> 0x0000000000400ef0 <+71>:	add    $0x4,%rbx
+
+ // Now we have to compare value of %rbp and %rbx
+=> 0x0000000000400ef4 <+75>:	cmp    %rbp,%rbx
+   0x0000000000400ef7 <+78>:	jne    0x400ee1 <phase_2+56>
+   0x0000000000400ef9 <+80>:	mov    0x18(%rsp),%rax
+
+ //As the values of %rbp, and %rbx are not equal we will be jump to <phase_2+56>  
+(gdb) x/d $rbp
+0x7fffffffddb0:	3  // value of %rbp
+(gdb) x/d $rbx
+0x7fffffffdda4:	1  // value of %rbx
+
+=> 0x0000000000400ee1 <+56>:	mov    0x4(%rbx),%eax
+   0x0000000000400ee4 <+59>:	add    (%rbx),%eax
+   0x0000000000400ee6 <+61>:	cmp    %eax,0x8(%rbx)
+   
+
+ // Then the next step would be to focus on the <phase_2+61> which is to compare the values of %eax and 0x8(%rbx).
+ => 0x0000000000400ee6 <+61>:	cmp    %eax,0x8(%rbx)
+ 
+ // The values of %eax, and 0x8(%rbx) would be : 
+(gdb) i r
+rax            0x2                 2   // value of %eax
+rbx            0x7fffffffdda4      140737488346532
+(gdb) x/d 0x7fffffffddac
+0x7fffffffddac:	2    // value of 0x8(%rbx)
+
+ // If the two values are equal then the next instruction  to be executed will be <phase_2+71> and if not then the bomb <explode_bomb> will be tirggered(break point will be triggered).
+=> 0x0000000000400ee9 <+64>:	je     0x400ef0 <phase_2+71>
+   0x0000000000400eeb <+66>:	callq  0x40143d <explode_bomb>
+   0x0000000000400ef0 <+71>:	add    $0x4,%rbx
+
+ // As the two values are equal the <explode_bomb> function is skipped. Therefore, we come to know that our fourth input(2) is correct. 
+   0x0000000000400ee9 <+64>:	je     0x400ef0 <phase_2+71>
+   0x0000000000400eeb <+66>:	callq  0x40143d <explode_bomb>
+=> 0x0000000000400ef0 <+71>:	add    $0x4,%rbx
+
+ // Till now we have gotten first four numbers of the phase_2 answer. The pattern seen in this numbers sre thst of the fibonacci series where a series of number is the sum of the two preceding numbers. It is okay to execute every instruction till we get the last number but we can sometimes make a precdition like in this case. So lets update the input data and run the program again with the new input (0 1 1 2 3 5).
+ 
+(gdb) delete      // deleting the break points from <phase_2> and <explode_bomb> functions
+Delete all breakpoints? (y or n) y
+(gdb) b phase_3   // setting a break point in phase_3
+Breakpoint 3 at 0x400f15
+(gdb) b explode_bomb   // setting a break point in explode_bomb
+Breakpoint 4 at 0x40143d
+(gdb) r sol1.txt
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /home/rushme/Downloads/Assignment 1_2/Assignment 1/bomb001/bomb sol1.txt
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Phase 1 defused. How about the next one?
+0 1 1 2 3 5                 // new input (fibonacci series)
+That's number 2.  Keep going!  
+
+ // Hence, the answer for phase_2 bomb is accepted and the bomb is difused. 
+ 
+ 
+ 
+  
+
+
+  
+
+
