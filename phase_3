@@ -1,1 +1,160 @@
+Bomb001 : Phase_3
+
+NOTE : All the lines starting with the symbol " // " are the comments / documentation
+
+// After the defusion of the phase_2 bomb, the answer of the phase_2 is saved in a txt file( sol2.txt)for efficiency in execution of the rest of the phases. 
+
+That's number 2.  Keep going!  // phase_2 bomb defused
+phase_3 solution   // A random input answer
+
+Breakpoint 3, 0x0000000000400f15 in phase_3 ()
+(gdb) disas
+Dump of assembler code for function phase_3:
+=> 0x0000000000400f15 <+0>:	sub    $0x18,%rsp
+   0x0000000000400f19 <+4>:	mov    %fs:0x28,%rax
+   0x0000000000400f22 <+13>:	mov    %rax,0x8(%rsp)
+   0x0000000000400f27 <+18>:	xor    %eax,%eax
+   0x0000000000400f29 <+20>:	lea    0x4(%rsp),%rcx
+   0x0000000000400f2e <+25>:	mov    %rsp,%rdx
+   0x0000000000400f31 <+28>:	mov    $0x4025cf,%esi      // The 0x4025cf is being moved to %esi
+   0x0000000000400f36 <+33>:	callq  0x400bb0 <__isoc99_sscanf@plt>
+   0x0000000000400f3b <+38>:	cmp    $0x1,%eax
+   0x0000000000400f3e <+41>:	jg     0x400f45 <phase_3+48>
+   0x0000000000400f40 <+43>:	callq  0x40143d <explode_bomb>
+   0x0000000000400f45 <+48>:	cmpl   $0x7,(%rsp)
+   0x0000000000400f49 <+52>:	ja     0x400fa6 <phase_3+145>
+   0x0000000000400f4b <+54>:	mov    (%rsp),%eax
+   0x0000000000400f4e <+57>:	jmpq   *0x402440(,%rax,8)
+   0x0000000000400f55 <+64>:	mov    $0x134,%eax
+   0x0000000000400f5a <+69>:	jmp    0x400f61 <phase_3+76>
+   0x0000000000400f5c <+71>:	mov    $0x0,%eax
+   0x0000000000400f61 <+76>:	sub    $0x85,%eax
+   0x0000000000400f66 <+81>:	jmp    0x400f6d <phase_3+88>
+   0x0000000000400f68 <+83>:	mov    $0x0,%eax
+   0x0000000000400f6d <+88>:	add    $0x201,%eax
+   0x0000000000400f72 <+93>:	jmp    0x400f79 <phase_3+100>
+   0x0000000000400f74 <+95>:	mov    $0x0,%eax
+   0x0000000000400f79 <+100>:	sub    $0x68,%eax
+   0x0000000000400f7c <+103>:	jmp    0x400f83 <phase_3+110>
+   0x0000000000400f7e <+105>:	mov    $0x0,%eax
+   0x0000000000400f83 <+110>:	add    $0x68,%eax
+   0x0000000000400f86 <+113>:	jmp    0x400f8d <phase_3+120>
+   0x0000000000400f88 <+115>:	mov    $0x0,%eax
+   0x0000000000400f8d <+120>:	sub    $0x68,%eax
+   0x0000000000400f90 <+123>:	jmp    0x400f97 <phase_3+130>
+   0x0000000000400f92 <+125>:	mov    $0x0,%eax
+   0x0000000000400f97 <+130>:	add    $0x68,%eax
+   0x0000000000400f9a <+133>:	jmp    0x400fa1 <phase_3+140>
+   0x0000000000400f9c <+135>:	mov    $0x0,%eax
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x0000000000400fa1 <+140>:	sub    $0x68,%eax
+   0x0000000000400fa4 <+143>:	jmp    0x400fb0 <phase_3+155>
+   0x0000000000400fa6 <+145>:	callq  0x40143d <explode_bomb>
+   0x0000000000400fab <+150>:	mov    $0x0,%eax
+   0x0000000000400fb0 <+155>:	cmpl   $0x5,(%rsp)
+   0x0000000000400fb4 <+159>:	jg     0x400fbc <phase_3+167>
+   0x0000000000400fb6 <+161>:	cmp    0x4(%rsp),%eax
+   0x0000000000400fba <+165>:	je     0x400fc1 <phase_3+172>
+   0x0000000000400fbc <+167>:	callq  0x40143d <explode_bomb>
+   0x0000000000400fc1 <+172>:	mov    0x8(%rsp),%rax
+   0x0000000000400fc6 <+177>:	xor    %fs:0x28,%rax
+   0x0000000000400fcf <+186>:	je     0x400fd6 <phase_3+193>
+   0x0000000000400fd1 <+188>:	callq  0x400b00 <__stack_chk_fail@plt>
+   0x0000000000400fd6 <+193>:	add    $0x18,%rsp
+   0x0000000000400fda <+197>:	retq   
+End of assembler dump.
+(gdb) x/s 0x4025cf
+0x4025cf:	"%d %d"    // From 0x4025cf two data of data type integer is being moved to %esi. This somehow lets us know that this is 					the input format for this phase. So, lets change the input as 0 1 :
+ 
+ (gdb) r sol1.txt
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /home/rushme/Downloads/Assignment 1_2/Assignment 1/bomb001/bomb sol1.txt
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Phase 1 defused. How about the next one?
+0 1 1 2 3 5
+That's number 2.  Keep going!
+0 1           // input updated
+
+ // Lets now execute the program from <phase_3+38> where 1 is compared with the value of %eax.
+   0x0000000000400f36 <+33>:	callq  0x400bb0 <__isoc99_sscanf@plt>
+=> 0x0000000000400f3b <+38>:	cmp    $0x1,%eax 
+ // The value of %eax is: 
+  (gdb) i r
+  rax            0x2                 2  
+
+
+ //Before execution of <+43> 
+=> 0x0000000000400f3e <+41>:	jg     0x400f45 <phase_3+48>  // if 2(value of %eax) is greater than 1
+   0x0000000000400f40 <+43>:	callq  0x40143d <explode_bomb>
+   0x0000000000400f45 <+48>:	cmpl   $0x7,(%rsp)  
+   
+ // As the 2(value of %eax) is greater than 1 and the bomb does not explode, our first input(0) is correct.
+   0x0000000000400f3e <+41>:	jg     0x400f45 <phase_3+48>
+   0x0000000000400f40 <+43>:	callq  0x40143d <explode_bomb>
+=> 0x0000000000400f45 <+48>:	cmpl   $0x7,(%rsp) // The value of %rsp is compared with 7
+ // The value of %rsp is : 
+  (gdb) x/d $rsp
+  0x7fffffffddc0:	0
+ 
+ // In <phase_3+145>, the <explode_bomb> is called but as the value of %rsp=0 is not above than 7. So, the bomb is not exploded.
+    From this execution also come to know that the first input has to be below 7.
+  => 0x0000000000400f49 <+52>:	ja     0x400fa6 <phase_3+145>
+   0x0000000000400f4b <+54>:	mov    (%rsp),%eax
+   
+  // Now lets directly execute <+155> where the value of %rsp is compared with 5. 
+  => 0x0000000000400fb0 <+155>:	cmpl   $0x5,(%rsp)
+  
+  (gdb) x/d $rsp
+  0x7fffffffddc0:	0   // value of rsp=0
+  
+  // The value of rsp=0 which is not greater than 5 so, the bomb in <phase_3+167> is not called.
+  => 0x0000000000400fb4 <+159>:	jg     0x400fbc <phase_3+167>
+  
+  // The value of 0x4(%rsp), and %eax is compared.
+  => 0x0000000000400fb6 <+161>:	cmp    0x4(%rsp),%eax
+  
+  (gdb) x/d $rsp+4
+  0x7fffffffddc4:	1  // 0x4(%rsp) value which is our second input
+  
+  (gdb) i r
+  rax            0x248               584    // %eax value which is system input 
+  
+  // As the values of 0x4(%rsp)= 1 and %eax=584 is not equal, the bomb will explode. So, lets update our input as 0 584.
+   0x0000000000400fba <+165>:	je     0x400fc1 <phase_3+172>
+   0x0000000000400fbc <+167>:	callq  0x40143d <explode_bomb>
+   0x0000000000400fc1 <+172>:	mov    0x8(%rsp),%rax
+
+ // After the manipulation of the input, the bomb does not explode which means the current input is the right answer.
+   0x0000000000400fba <+165>:	je     0x400fc1 <phase_3+172>
+   0x0000000000400fbc <+167>:	callq  0x40143d <explode_bomb>
+=> 0x0000000000400fc1 <+172>:	mov    0x8(%rsp),%rax
+
+ // Now,lets delete the break points and r the program again to see if the bomb gets defused or not.
+(gdb) delete
+Delete all breakpoints? (y or n) y
+(gdb) r sol1.txt
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /home/rushme/Downloads/Assignment 1_2/Assignment 1/bomb001/bomb sol1.txt
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Phase 1 defused. How about the next one?
+0 1 1 2 3 5
+That's number 2.  Keep going!
+0 584
+Halfway there!
+
+// Hence, the answer for phase_3 bomb is accepted and the bomb is defused.
+
+
+  
+
+
+
+
+
+ 
+
 
