@@ -2,7 +2,7 @@ Bomb001 : Phase_2
 
 NOTE : All the lines starting with the symbol " // " are the comments / documentation.
 
-// After the defusion of the first phase, the answer of the phase_1 is saved in a txt file( sol1.txt)for efficiency in execution of the rest of the phases. 
+// After the defusion of the phase_1 bomb, the answer of the phase_1 is saved in a txt file( sol1.txt)for efficiency in execution of the rest of the phases. 
 
 Starting program: /home/rushme/Downloads/Assignment 1_2/Assignment 1/bomb001/bomb 
 Welcome to my fiendish little bomb. You have 6 phases with
