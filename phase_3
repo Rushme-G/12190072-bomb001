@@ -2,7 +2,7 @@ Bomb001 : Phase_3
 
 NOTE : All the lines starting with the symbol " // " are the comments / documentation
 
-// After the defusion of the phase_2 bomb, the answer of the phase_2 is saved in a txt file( sol2.txt)for efficiency in execution of the rest of the phases. 
+// After the defusion of the phase_2 bomb : 
 
 That's number 2.  Keep going!  // phase_2 bomb defused
 phase_3 solution   // A random input answer
