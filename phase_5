@@ -1,1 +1,198 @@
+Bomb001 : Phase_5
 
+NOTE : All the lines starting with the symbol " // " are the comments / documentation
+
+// After defusing phase_4, all the breaks at phase_4 are deleted and new breakpoints are set at phase_5 and explode_bomb functions inorder to avoid explosion of the bomb.
+
+// Now, the answer of phase_4 is also included in the "sol1.txt" file
+// So, after the defusion of the phase_4 bomb :    
+
+(gdb) delete
+Delete all breakpoints? (y or n) y
+(gdb) b explode_bomb
+Breakpoint 3 at 0x40143d
+(gdb) b phase_5
+Breakpoint 4 at 0x401081
+(gdb) r sol1.txt
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /mnt/c/Users/97517/Desktop/bomb001/bomb sol1.txt
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Phase 1 defused. How about the next one?
+That's number 2.  Keep going!
+Halfway there!
+So you got that one.  Try this one.
+phase_5 result
+
+Breakpoint 4, 0x0000000000401081 in phase_5 ()
+(gdb) disas
+Dump of assembler code for function phase_5:
+=> 0x0000000000401081 <+0>:     sub    $0x18,%rsp
+   0x0000000000401085 <+4>:     mov    %fs:0x28,%rax
+   0x000000000040108e <+13>:    mov    %rax,0x8(%rsp)
+   0x0000000000401093 <+18>:    xor    %eax,%eax
+   0x0000000000401095 <+20>:    lea    0x4(%rsp),%rcx
+   0x000000000040109a <+25>:    mov    %rsp,%rdx
+   0x000000000040109d <+28>:    mov    $0x4025cf,%esi        // Input format for this phase is identified from this instruction
+                                                             // (gdb) x/s 0x4025cf
+                                                             // 0x4025cf:       "%d %d"
+                                                             // The input format is two integers, therefore lets change the input format and run the program again 
+                                                            
+   0x00000000004010a2 <+33>:    callq  0x400bb0 <__isoc99_sscanf@plt>  
+   0x00000000004010a7 <+38>:    cmp    $0x1,%eax
+   0x00000000004010aa <+41>:    jg     0x4010b1 <phase_5+48>
+   0x00000000004010ac <+43>:    callq  0x40143d <explode_bomb>
+   0x00000000004010b1 <+48>:    mov    (%rsp),%eax
+   0x00000000004010b4 <+51>:    and    $0xf,%eax
+   0x00000000004010b7 <+54>:    mov    %eax,(%rsp)
+   0x00000000004010ba <+57>:    cmp    $0xf,%eax
+   0x00000000004010bd <+60>:    je     0x4010ee <phase_5+109>
+   0x00000000004010bf <+62>:    mov    $0x0,%ecx
+   0x00000000004010c4 <+67>:    mov    $0x0,%edx
+   0x00000000004010c9 <+72>:    add    $0x1,%edx
+   0x00000000004010cc <+75>:    cltq
+   0x00000000004010ce <+77>:    mov    0x402480(,%rax,4),%eax
+   0x00000000004010d5 <+84>:    add    %eax,%ecx
+   0x00000000004010d7 <+86>:    cmp    $0xf,%eax
+   0x00000000004010da <+89>:    jne    0x4010c9 <phase_5+72>
+   0x00000000004010dc <+91>:    movl   $0xf,(%rsp)
+   0x00000000004010e3 <+98>:    cmp    $0xf,%edx
+   0x00000000004010e6 <+101>:   jne    0x4010ee <phase_5+109>
+   0x00000000004010e8 <+103>:   cmp    0x4(%rsp),%ecx
+   0x00000000004010ec <+107>:   je     0x4010f3 <phase_5+114>
+   0x00000000004010ee <+109>:   callq  0x40143d <explode_bomb>
+   0x00000000004010f3 <+114>:   mov    0x8(%rsp),%rax
+   0x00000000004010f8 <+119>:   xor    %fs:0x28,%rax
+   0x0000000000401101 <+128>:   je     0x401108 <phase_5+135>
+   0x0000000000401103 <+130>:   callq  0x400b00 <__stack_chk_fail@plt>
+   --Type <RET> for more, q to quit, c to continue without paging--
+   0x0000000000401108 <+135>:   add    $0x18,%rsp
+   0x000000000040110c <+139>:   retq
+End of assembler dump
+
+(gdb) r sol1.txt
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /mnt/c/Users/97517/Desktop/bomb001/bomb sol1.txt
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Phase 1 defused. How about the next one?
+That's number 2.  Keep going!
+Halfway there!
+So you got that one.  Try this one.
+0 1
+
+Breakpoint 4, 0x0000000000401081 in phase_5 ()
+(gdb) disas
+Dump of assembler code for function phase_5:
+=> 0x0000000000401081 <+0>:     sub    $0x18,%rsp
+   0x0000000000401085 <+4>:     mov    %fs:0x28,%rax
+   0x000000000040108e <+13>:    mov    %rax,0x8(%rsp)
+   0x0000000000401093 <+18>:    xor    %eax,%eax
+   0x0000000000401095 <+20>:    lea    0x4(%rsp),%rcx
+   0x000000000040109a <+25>:    mov    %rsp,%rdx
+   0x000000000040109d <+28>:    mov    $0x4025cf,%esi
+   0x00000000004010a2 <+33>:    callq  0x400bb0 <__isoc99_sscanf@plt>
+   0x00000000004010a7 <+38>:    cmp    $0x1,%eax
+   0x00000000004010aa <+41>:    jg     0x4010b1 <phase_5+48>
+   0x00000000004010ac <+43>:    callq  0x40143d <explode_bomb>
+   0x00000000004010b1 <+48>:    mov    (%rsp),%eax
+   0x00000000004010b4 <+51>:    and    $0xf,%eax
+   0x00000000004010b7 <+54>:    mov    %eax,(%rsp)
+   0x00000000004010ba <+57>:    cmp    $0xf,%eax
+   0x00000000004010bd <+60>:    je     0x4010ee <phase_5+109>
+   0x00000000004010bf <+62>:    mov    $0x0,%ecx
+   0x00000000004010c4 <+67>:    mov    $0x0,%edx
+   0x00000000004010c9 <+72>:    add    $0x1,%edx
+   0x00000000004010cc <+75>:    cltq
+   0x00000000004010ce <+77>:    mov    0x402480(,%rax,4),%eax
+   0x00000000004010d5 <+84>:    add    %eax,%ecx
+   0x00000000004010d7 <+86>:    cmp    $0xf,%eax
+   0x00000000004010da <+89>:    jne    0x4010c9 <phase_5+72>
+   0x00000000004010dc <+91>:    movl   $0xf,(%rsp)
+   0x00000000004010e3 <+98>:    cmp    $0xf,%edx
+   0x00000000004010e6 <+101>:   jne    0x4010ee <phase_5+109>
+   0x00000000004010e8 <+103>:   cmp    0x4(%rsp),%ecx
+   0x00000000004010ec <+107>:   je     0x4010f3 <phase_5+114>
+   0x00000000004010ee <+109>:   callq  0x40143d <explode_bomb>
+   0x00000000004010f3 <+114>:   mov    0x8(%rsp),%rax
+   0x00000000004010f8 <+119>:   xor    %fs:0x28,%rax
+   0x0000000000401101 <+128>:   je     0x401108 <phase_5+135>
+   0x0000000000401103 <+130>:   callq  0x400b00 <__stack_chk_fail@plt>
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x0000000000401108 <+135>:   add    $0x18,%rsp
+   0x000000000040110c <+139>:   retq
+End of assembler dump.
+(gdb) u* 0x00000000004010a7
+0x00000000004010a7 in phase_5 ()
+(gdb) disas
+Dump of assembler code for function phase_5:
+   0x0000000000401081 <+0>:     sub    $0x18,%rsp
+   0x0000000000401085 <+4>:     mov    %fs:0x28,%rax
+   0x000000000040108e <+13>:    mov    %rax,0x8(%rsp)
+   0x0000000000401093 <+18>:    xor    %eax,%eax
+   0x0000000000401095 <+20>:    lea    0x4(%rsp),%rcx
+   0x000000000040109a <+25>:    mov    %rsp,%rdx
+   0x000000000040109d <+28>:    mov    $0x4025cf,%esi
+   0x00000000004010a2 <+33>:    callq  0x400bb0 <__isoc99_sscanf@plt>
+=> 0x00000000004010a7 <+38>:    cmp    $0x1,%eax                           // the value of %eax = 2 is compared with 0x1 = 1 [2 : 1]
+   0x00000000004010aa <+41>:    jg     0x4010b1 <phase_5+48>               // 2 > 1 is true and therefore, explode_bomb is skipped
+   0x00000000004010ac <+43>:    callq  0x40143d <explode_bomb>             // bomb here is skipped
+   0x00000000004010b1 <+48>:    mov    (%rsp),%eax                         // value of (%rsp) is moved into %eax
+
+(gdb) i r
+rax            0x2                 2                // value of %eax is 2
+rbx            0x7ffffffee4a8      140737488282792
+
+(gdb) u*0x00000000004010ba
+0x00000000004010ba in phase_5 ()
+(gdb) disas
+Dump of assembler code for function phase_5:
+   0x0000000000401081 <+0>:     sub    $0x18,%rsp
+   0x0000000000401085 <+4>:     mov    %fs:0x28,%rax
+   0x000000000040108e <+13>:    mov    %rax,0x8(%rsp)
+   0x0000000000401093 <+18>:    xor    %eax,%eax
+   0x0000000000401095 <+20>:    lea    0x4(%rsp),%rcx
+   0x000000000040109a <+25>:    mov    %rsp,%rdx
+   0x000000000040109d <+28>:    mov    $0x4025cf,%esi
+   0x00000000004010a2 <+33>:    callq  0x400bb0 <__isoc99_sscanf@plt>
+   0x00000000004010a7 <+38>:    cmp    $0x1,%eax
+   0x00000000004010aa <+41>:    jg     0x4010b1 <phase_5+48>
+   0x00000000004010ac <+43>:    callq  0x40143d <explode_bomb>
+   0x00000000004010b1 <+48>:    mov    (%rsp),%eax
+   0x00000000004010b4 <+51>:    and    $0xf,%eax
+   0x00000000004010b7 <+54>:    mov    %eax,(%rsp)
+=> 0x00000000004010ba <+57>:    cmp    $0xf,%eax               // value of %eax = 0 [ which is also the first user input ] is compared with 0xf = 15
+   0x00000000004010bd <+60>:    je     0x4010ee <phase_5+109>  // As, the condition: 0 = 15 is not true, the explode_bomb at <phase_5+109> is avoided.
+   0x00000000004010bf <+62>:    mov    $0x0,%ecx               // value 0 is moved into %ecx
+   0x00000000004010c4 <+67>:    mov    $0x0,%edx               // value 0 is moved into %edx  
+   0x00000000004010c9 <+72>:    add    $0x1,%edx               // value of %edx is incremented by 1
+   0x00000000004010cc <+75>:    cltq                           // conversion to quart word
+   0x00000000004010ce <+77>:    mov    0x402480(,%rax,4),%eax  // value of 0x402480(,%rax,4) is moved into %eax 
+   0x00000000004010d5 <+84>:    add    %eax,%ecx               // value of %eax and %ecx is added
+   0x00000000004010d7 <+86>:    cmp    $0xf,%eax               // value of %eax =  is compared with 0xf = 15
+   0x00000000004010da <+89>:    jne    0x4010c9 <phase_5+72>
+   0x00000000004010dc <+91>:    movl   $0xf,(%rsp)
+   0x00000000004010e3 <+98>:    cmp    $0xf,%edx
+   0x00000000004010e6 <+101>:   jne    0x4010ee <phase_5+109>
+   0x00000000004010e8 <+103>:   cmp    0x4(%rsp),%ecx
+   0x00000000004010ec <+107>:   je     0x4010f3 <phase_5+114>
+   0x00000000004010ee <+109>:   callq  0x40143d <explode_bomb>
+   0x00000000004010f3 <+114>:   mov    0x8(%rsp),%rax
+   0x00000000004010f8 <+119>:   xor    %fs:0x28,%rax
+   0x0000000000401101 <+128>:   je     0x401108 <phase_5+135>
+   0x0000000000401103 <+130>:   callq  0x400b00 <__stack_chk_fail@plt>
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x0000000000401108 <+135>:   add    $0x18,%rsp
+   0x000000000040110c <+139>:   retq
+End of assembler dump.
+(gdb) i r
+rax            0x0                 0
+rbx            0x7ffffffee4a8      140737488282792
+rcx            0x0                 0
+rdx            0x7ffffffee394      140737488282516
+rsi            0x0                 0
+rdi            0x7ffffffedd40      140737488280896
+rbp            0x0                 0x0
+rsp            0x7ffffffee390      0x7ffffffee390
