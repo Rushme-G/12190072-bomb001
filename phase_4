@@ -1,1 +1,10 @@
+Bomb001 : Phase_4
 
+NOTE : All the lines starting with the symbol " // " are the comments / documentation
+
+// Before defusing the phase_3, all the breaks at phase_3 are deleted and new breaks are set at phase_4 and explode_bomb functions inorder to 
+//
+// After the defusion of the phase_3 bomb : 
+
+That's number 2.  Keep going!  // phase_2 bomb defused
+phase_3 solution   // A random input answer
